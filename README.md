@@ -1,34 +1,62 @@
-Keystrike
+# React + Vite
+
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+
+Currently, two official plugins are available:
+
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+
+## React Compiler
+
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+
+## Expanding the ESLint configuration
+
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+# Keystrike
 
 A minimalist typing speed test web app built with React, Redux Toolkit, and a fake REST backend (json-server). Practice your typing speed and accuracy across three modes, and track your progress over time with a personal account.
 
-Features
-Three typing modes
-Time — type for a fixed duration (15s / 30s / 60s / 120s) against a stream of random common words
-Words — type a fixed number of words (10 / 25 / 50 / 100)
-Quote — type a real quote, chosen by length (Short / Medium / Long)
-Live stats while typing — real-time WPM and accuracy as you type, with per-character correct/incorrect highlighting
-Results screen — final WPM, accuracy, character count, error count, and a WPM-over-time chart for each completed test
-Fake authentication — sign up / log in via json-server, used only to unlock personal history (not intended as secure/production auth)
-Personal dashboard — best WPM, average WPM, tests taken, a progress chart, and a table of recent attempts (visible only when logged in)
-Dark / light theme
-Fully responsive layout
-Tech stack
-Layer	Tool
-UI	React
-Routing	React Router
-Global state	Redux Toolkit
-Local/session-specific state	useReducer (typing engine)
-Fake backend	json-server
-Charts	Recharts (or Chart.js)
-Styling	CSS / Tailwind (adjust to your setup)
-How WPM is calculated
+## Features
+
+- **Three typing modes**
+  - **Time** — type for a fixed duration (15s / 30s / 60s / 120s) against a stream of random common words
+  - **Words** — type a fixed number of words (10 / 25 / 50 / 100)
+  - **Quote** — type a real quote, chosen by length (Short / Medium / Long)
+- **Live stats while typing** — real-time WPM and accuracy as you type, with per-character correct/incorrect highlighting
+- **Results screen** — final WPM, accuracy, character count, error count, and a WPM-over-time chart for each completed test
+- **Fake authentication** — sign up / log in via json-server, used only to unlock personal history (not intended as secure/production auth)
+- **Personal dashboard** — best WPM, average WPM, tests taken, a progress chart, and a table of recent attempts (visible only when logged in)
+- **Dark / light theme**
+- **Fully responsive** layout
+
+## Tech stack
+
+| Layer | Tool |
+|---|---|
+| UI | React |
+| Routing | React Router |
+| Global state | Redux Toolkit |
+| Local/session-specific state | `useReducer` (typing engine) |
+| Fake backend | json-server |
+| Charts | Recharts (or Chart.js) |
+| Styling | CSS / Tailwind (adjust to your setup) |
+
+## How WPM is calculated
+
+```
 WPM = (Correct Characters Typed / 5) / Time Elapsed (minutes)
 Accuracy = (Correct Characters / Total Characters Typed) × 100
-Time mode: time is fixed, characters typed is variable — WPM is calculated the moment the timer hits zero.
-Words mode: word count is fixed, time is variable — the timer starts on the first keystroke and stops on the last character of the final word.
-Quote mode: the quote's length is fixed, time is variable — same timing approach as Words mode, applied to a specific pre-written quote instead of randomly generated words.
-Project structure
+```
+
+- **Time mode**: time is fixed, characters typed is variable — WPM is calculated the moment the timer hits zero.
+- **Words mode**: word count is fixed, time is variable — the timer starts on the first keystroke and stops on the last character of the final word.
+- **Quote mode**: the quote's length is fixed, time is variable — same timing approach as Words mode, applied to a specific pre-written quote instead of randomly generated words.
+
+## Project structure
+
+```
 src/
 ├── app/
 │   ├── App.jsx
@@ -52,12 +80,17 @@ src/
 └── utils/
     ├── calculateWpm.js
     └── generateText.js
-State management approach
-useReducer handles the live typing session (idle → running → finished), since this state changes on every keystroke and is local to the typing screen only.
-Redux Toolkit handles state shared across the app: authentication status, saved test history (fetched from json-server), and user settings/theme.
-Only the final result of a completed test is passed from the local reducer into Redux, to be saved to history if the user is logged in.
-Running locally
-bash
+```
+
+## State management approach
+
+- **`useReducer`** handles the live typing session (idle → running → finished), since this state changes on every keystroke and is local to the typing screen only.
+- **Redux Toolkit** handles state shared across the app: authentication status, saved test history (fetched from json-server), and user settings/theme.
+- Only the *final result* of a completed test is passed from the local reducer into Redux, to be saved to history if the user is logged in.
+
+## Running locally
+
+```bash
 # install dependencies
 npm install
 
@@ -66,7 +99,9 @@ npx json-server --watch db.json --port 3001
 
 # start the app
 npm run dev
-Notes
-Authentication is intentionally fake (json-server, no password hashing or real sessions) — this project is for practicing React state management patterns, not for production security.
-Word bank and quotes are static local data; no external API or AI is used to generate typing content.
-Content
+```
+
+## Notes
+
+- Authentication is intentionally fake (json-server, no password hashing or real sessions) — this project is for practicing React state management patterns, not for production security.
+- Word bank and quotes are static local data; no external API or AI is used to generate typing content.
