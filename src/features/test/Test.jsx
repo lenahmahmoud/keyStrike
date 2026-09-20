@@ -34,9 +34,18 @@ const Test = () => {
     inp.current.value = "";
   };
   const handleTyping = (input) => {
+    // handle start
     if (state.status === "idle") {
-      dispatch({ type: "START" });
+      dispatch({
+        type: "START",
+        payload: {
+          mainOption: options.mainOption,
+          subOption: options.subOption,
+        },
+      });
     }
+
+    //  handle every word
     if (input[input.length - 1] === " ") {
       dispatch({ type: "TYPEDTEXT", payload: input.trim() });
       dispatch({ type: "COMPARISON" });

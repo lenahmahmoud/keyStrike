@@ -11,9 +11,17 @@ const reducer = (state, action) => {
         status: "idle",
       };
     case "START":
-      return { ...state, status: "running" };
+      return {
+        ...state,
+        status: "running",
+        timeLeft:
+          action.payload.mainOption === "time"
+            ? Number(action.payload.subOption)
+            : 0,
+      };
     case "TYPEDTEXT":
       return { ...state, typedText: action.payload };
+
     case "COMPARISON":
       return {
         ...state,
@@ -41,6 +49,12 @@ const initialState = {
   textStream: [],
   typedText: "",
   currentWord: 0,
+  //  for the time
+  timeLeft: 0,
+  numberOfWords: 0,
+  //  for the quote and words
+  timeTaken: 0,
+  startTime: "",
 };
 
 export function TypingEngine() {
