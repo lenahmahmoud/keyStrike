@@ -9,16 +9,20 @@ const Navbar = () => {
           <span>
             <i className="fa-solid fa-keyboard text-accent"></i>
           </span>
-          <span className="text-grLight"><Link to="/">
-          keyStrike</Link></span>
+          <span className="text-grLight">
+            <Link to="/">keyStrike</Link>
+          </span>
         </div>
 
         <div className="flex items-center gap-8 text-2xl ">
+          <Link to="test" className=" hover:text-white text-grLight ">
+            Go to the test
+          </Link>
           <Link to="howitworks" className=" hover:text-white text-grLight ">
             How it works
           </Link>
-       
-          <Link to="#" className=" text-grLight hover:text-white ">
+
+          <Link to="dashboard" className=" text-grLight hover:text-white ">
             DashBoard
           </Link>
           {!isLoggedIn ? (

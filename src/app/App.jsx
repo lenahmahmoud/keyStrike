@@ -1,9 +1,13 @@
 import Home from "../pages/Home";
 import HowItWorks from "../pages/HowItWorks";
 import Login from "../features/users/Login";
+import SignUp from "../features/users/SignUp";
+import DashBoard from "../features/history/DashBoard";
+import Test from "../features/test/Test";
 
 import RootLayout from "../layouts/RootLayout";
 import AuthLayout from "../layouts/AuthLayout";
+import HistoryLayout from "../layouts/HistoryLayout";
 
 import { RouterProvider } from "react-router";
 import {
@@ -11,7 +15,6 @@ import {
   createRoutesFromElements,
   Route,
 } from "react-router";
-import SignUp from "../features/users/SignUp";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -19,10 +22,16 @@ const router = createBrowserRouter(
       <Route element={<RootLayout />}>
         <Route index element={<Home />} />
         <Route path="howitworks" element={<HowItWorks />} />
+        <Route path="test" element={<Test></Test>}></Route>
       </Route>
       <Route element={<AuthLayout />}>
         <Route path="login" element={<Login />} />
         <Route path="signup" element={<SignUp />} />
+      </Route>
+      <Route >
+     <Route element={<HistoryLayout></HistoryLayout>}>
+       <Route path="dashboard" element={<DashBoard></DashBoard>}></Route>
+     </Route>
       </Route>
     </>,
   ),

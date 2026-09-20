@@ -70,3 +70,4 @@ const userSlice = createSlice({
   },
 });
 export default userSlice.reducer;
+export const isLoggedIn = (state) => state.user.isLoggedIn;
