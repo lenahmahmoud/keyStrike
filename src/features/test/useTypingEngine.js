@@ -39,6 +39,27 @@ const reducer = (state, action) => {
         }),
         currentWord: state.currentWord + 1,
       };
+    case "TICK": {
+      const newTime = state.timeLeft - 1;
+      return {
+        ...state,
+        timeLeft: newTime,
+        status: newTime == 0 ? "finished" : "running",
+      };
+    }
+    case "RECORDTIME": {
+      const newTime = state.timeTaken + 1;
+      return {
+        ...state,
+        timeTaken: newTime,
+        status:
+          state.currentWord === state.textStream.length
+            ? "finished"
+            : "running",
+      };
+    }
+    case "RESET":
+      return initialState;
     default:
       return state;
   }
@@ -49,12 +70,8 @@ const initialState = {
   textStream: [],
   typedText: "",
   currentWord: 0,
-  //  for the time
   timeLeft: 0,
-  numberOfWords: 0,
-  //  for the quote and words
   timeTaken: 0,
-  startTime: "",
 };
 
 export function TypingEngine() {

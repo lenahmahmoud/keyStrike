@@ -14,6 +14,7 @@ const Test = () => {
     quote: ["short", "medium", "long"],
   };
   const userInp = useRef();
+  const isFinished = state.status === "finished";
 
   const handleModes = ({ type, value }) => {
     if (type === "mainOption") {
@@ -52,6 +53,11 @@ const Test = () => {
       reset(userInp);
     }
   };
+  const handleReset = () => {
+    if (state.status == "running") {
+      dispatch({ type: "RESET" });
+    }
+  };
 
   useEffect(() => {
     dispatch({
@@ -59,16 +65,39 @@ const Test = () => {
       payload: generate(options.mainOption, options.subOption),
     });
   }, [options, dispatch]);
+  useEffect(() => {
+    if (state.status !== "running" || state.timeLeft <= 0) return;
+
+    const intervalId = setInterval(() => {
+      dispatch({ type: "TICK" });
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [state.status, dispatch, state.timeLeft]);
+
+  useEffect(() => {
+    if (state.status !== "running" || options.mainOption === "time") return;
+    const intervalId = setInterval(() => {
+      dispatch({ type: "RECORDTIME" });
+    }, 1000);
+    return () => clearInterval(intervalId);
+  }, [state.status, dispatch, options.mainOption]);
+  useEffect(() => {
+    if (isFinished) {
+      const audio = new Audio("/sounds/freesound_community-ding-36029.mp3");
+      audio.play();
+    }
+  }, [isFinished]);
 
   return (
     <div className="min-h-[90vh] flex justify-center  items-center  ">
       <div className="flex flex-col items-center w-[60%] ">
-        {/* Mode selector + sub-options */}
         <div className="flex items-center gap-1 bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-2xl">
           <button
             className={`px-3 py-1 rounded-md  efont-medium cursor-pointer ${options.mainOption === "time" ? `text-accent` : ""} `}
             onClick={() => {
               handleModes({ type: "mainOption", value: "time" });
+              handleReset();
             }}
           >
             time
@@ -77,6 +106,7 @@ const Test = () => {
             className={`px-3 py-1 rounded-md  efont-medium cursor-pointer ${options.mainOption === "words" ? `text-accent` : ""} `}
             onClick={() => {
               handleModes({ type: "mainOption", value: "words" });
+              handleReset();
             }}
           >
             words
@@ -88,6 +118,7 @@ const Test = () => {
                 type: "mainOption",
                 value: "quote",
               });
+              handleReset();
             }}
           >
             quote
@@ -100,6 +131,7 @@ const Test = () => {
               key={text}
               onClick={() => {
                 handleModes({ type: "subOption", value: text });
+                handleReset();
               }}
             >
               {text}
@@ -111,17 +143,11 @@ const Test = () => {
         {/* Live stats */}
         <div className="flex items-center gap-8 mt-8 text-2xl text-gray-400">
           <span>
-            WPM: <span className="text-white">—</span>
-          </span>
-          <span>
-            Accuracy: <span className="text-white">—</span>
-          </span>
-          <span>
-            {options.mainOption.slice(0, 1).toUpperCase()}
-            {options.mainOption.slice(1)}:{" "}
-            <span className="text-white text-xl font-semibold">
-              {options.subOption}
-            </span>
+            {options.mainOption === "time"
+              ? state.status === "idle"
+                ? `Time Left :${options.subOption}s`
+                : `Time Left :${state.timeLeft}s`
+              : `Time Taken : ${state.timeTaken}s`}
           </span>
         </div>
 
@@ -151,13 +177,25 @@ const Test = () => {
               onChange={(e) => {
                 handleTyping(e.target.value);
               }}
+              disabled={isFinished}
               className="w-[30%]  rounded p-4  text-center outline-accent  text-4xl outline-2 mt-5  "
             />
           </div>
         </div>
 
         {/* Caption */}
-        <p className="mt-6 text-xl text-grDark italic">Start typing to begin</p>
+        <p className="text-center mt-6 text-3xl  text-grDark  italic ">
+          {isFinished ? (
+            <div>
+              <p>Nice work ! your results are ready</p>
+              <button className="mt-10 bg-accent text-lg  text-dark font-semibold px-6 py-2.5 rounded-lg hover:brightness-95 cursor-pointer">
+                see your result
+              </button>
+            </div>
+          ) : (
+            "Start typing to begin"
+          )}
+        </p>
       </div>
     </div>
   );
