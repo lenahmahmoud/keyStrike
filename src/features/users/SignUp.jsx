@@ -1,17 +1,21 @@
 import { Link, useNavigate } from "react-router";
 import { useEffect, useState, useRef } from "react";
+
 import {
   validateFormInputs,
   validateInputValues,
 } from "../../utils/validators";
+
 import { useDispatch, useSelector } from "react-redux";
 import { signUp } from "./userSlice";
+
 const Signup = () => {
   const [userInfo, setUserInfo] = useState({
     username: "",
     password: "",
     confirmPassword: "",
   });
+
   const [errors, setErrors] = useState({
     usernameEmpty: "",
     passwordEmpty: "",
@@ -20,6 +24,7 @@ const Signup = () => {
     passwordLength: "",
     passwordMatch: "",
   });
+
   const [show, setShow] = useState({
     password: false,
     username: false,
@@ -28,7 +33,6 @@ const Signup = () => {
 
   const dispatch = useDispatch();
   const { status, error } = useSelector((state) => state.user);
-
   const nav = useNavigate();
 
   const passInput = useRef();
@@ -37,12 +41,14 @@ const Signup = () => {
   const handleToggleEye = (input, inputType) => {
     input.current.type =
       input.current.type === "password" ? "text" : "password";
+
     setShow({ ...show, [inputType]: !show[inputType] });
   };
 
   const handleSaveSignUp = () => {
     const validationInputsResult = validateFormInputs(userInfo);
     const validationValuesResult = validateInputValues(userInfo);
+
     if (validationInputsResult.isValid && validationValuesResult.isValid) {
       dispatch(signUp(userInfo));
       setErrors(null);
@@ -62,17 +68,18 @@ const Signup = () => {
 
   return (
     <div className="flex items-center justify-center px-4">
-      <div className=" w-[35%] mt-20">
-        <div className="flex items-center justify-center gap-2 text-white font-bold text-xl mb-8">
-          <i className="fa-solid fa-keyboard text-accent"></i>
-          <span>TypeFlow</span>
+      <div className="w-[35%] mt-20">
+        <div className="flex items-center justify-center gap-2 text-light-text dark:text-white font-bold text-xl mb-8">
+          <i className="fa-solid fa-keyboard text-light-primary dark:text-accent"></i>
+          <span>keyStrike</span>
         </div>
 
-        <div className="bg-white/5 border border-white/10 rounded-xl p-8">
-          <h1 className="text-white text-xl font-semibold text-center">
+        <div className="bg-light-surface dark:bg-white/5 border border-light-border dark:border-white/10 rounded-xl p-8">
+          <h1 className="text-light-text dark:text-white text-xl font-semibold text-center">
             Create your account
           </h1>
-          <p className="text-gray-400 text-sm text-center mt-1">
+
+          <p className="text-light-text-secondary dark:text-gray-400 text-sm text-center mt-1">
             Save your history and track progress over time
           </p>
 
@@ -84,9 +91,13 @@ const Signup = () => {
             }}
           >
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="username" className="text-sm text-gray-300">
+              <label
+                htmlFor="username"
+                className="text-sm text-light-text-secondary dark:text-gray-300"
+              >
                 Username
               </label>
+
               <input
                 id="username"
                 type="text"
@@ -95,8 +106,9 @@ const Signup = () => {
                 onChange={(e) => {
                   setUserInfo({ ...userInfo, username: e.target.value });
                 }}
-                className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-accent"
+                className="bg-light-muted dark:bg-white/5 border border-light-border dark:border-white/10 rounded-lg px-3 py-2 text-light-text dark:text-white text-sm outline-none focus:border-light-primary dark:focus:border-accent"
               />
+
               {errors?.usernameEmpty ? (
                 <span className="text-warning">{errors?.usernameEmpty}</span>
               ) : errors?.usernameLength ? (
@@ -107,10 +119,14 @@ const Signup = () => {
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="password" className="text-sm text-gray-300">
+              <label
+                htmlFor="password"
+                className="text-sm text-light-text-secondary dark:text-gray-300"
+              >
                 Password
               </label>
-              <div className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-accent">
+
+              <div className="bg-light-muted dark:bg-white/5 border border-light-border dark:border-white/10 rounded-lg px-3 py-2 text-light-text dark:text-white text-sm outline-none focus-within:border-light-primary dark:focus-within:border-accent">
                 <input
                   id="password"
                   type={show.password ? "text" : "password"}
@@ -120,14 +136,16 @@ const Signup = () => {
                   onChange={(e) => {
                     setUserInfo({ ...userInfo, password: e.target.value });
                   }}
-                  className="w-[95%] outline-0"
+                  className="w-[95%] outline-0 bg-transparent"
                 />
 
                 <i
                   onClick={() => {
                     handleToggleEye(passInput, "password");
                   }}
-                  className={`fa-solid text-black cursor-pointer ${!show?.password ? "fa-eye-slash" : "fa-eye"}`}
+                  className={`fa-solid cursor-pointer ${
+                    !show?.password ? "fa-eye-slash" : "fa-eye"
+                  } text-light-text-secondary dark:text-black`}
                 ></i>
               </div>
 
@@ -143,11 +161,12 @@ const Signup = () => {
             <div className="flex flex-col gap-1.5">
               <label
                 htmlFor="confirmPassword"
-                className="text-sm text-gray-300"
+                className="text-sm text-light-text-secondary dark:text-gray-300"
               >
                 Confirm password
               </label>
-              <div className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-accent">
+
+              <div className="bg-light-muted dark:bg-white/5 border border-light-border dark:border-white/10 rounded-lg px-3 py-2 text-light-text dark:text-white text-sm outline-none focus-within:border-light-primary dark:focus-within:border-accent">
                 <input
                   id="confirmPassword"
                   type={show.confirm ? "text" : "password"}
@@ -159,14 +178,17 @@ const Signup = () => {
                       confirmPassword: e.target.value,
                     });
                   }}
-                  className="w-[95%] outline-0"
+                  className="w-[95%] outline-0 bg-transparent"
                   ref={confirmInput}
                 />
+
                 <i
                   onClick={() => {
                     handleToggleEye(confirmInput, "confirm");
                   }}
-                  className={`fa-solid text-black cursor-pointer ${!show?.confirm ? "fa-eye-slash" : "fa-eye"}`}
+                  className={`fa-solid cursor-pointer ${
+                    !show?.confirm ? "fa-eye-slash" : "fa-eye"
+                  } text-light-text-secondary dark:text-black`}
                 ></i>
               </div>
 
@@ -180,19 +202,28 @@ const Signup = () => {
                 ""
               )}
             </div>
-            <div>{error && <span className="text-warning ">{error}</span>}</div>
+
+            <div>
+              {error && (
+                <span className="text-warning">{error}</span>
+              )}
+            </div>
+
             <button
               type="submit"
-              className="mt-2  cursor-pointer bg-accent text-bgdark font-semibold rounded-lg py-2.5 text-sm hover:brightness-95"
+              className="mt-2 cursor-pointer bg-light-primary dark:bg-accent text-light-surface dark:text-dark font-semibold rounded-lg py-2.5 text-sm hover:brightness-95"
             >
               Sign up
             </button>
           </form>
         </div>
 
-        <p className="text-center text-sm text-gray-400 mt-6">
+        <p className="text-center text-sm text-light-text-secondary dark:text-gray-400 mt-6">
           Already have an account?{" "}
-          <Link to="/login" className="text-accent hover:underline">
+          <Link
+            to="/login"
+            className="text-light-primary dark:text-accent hover:underline"
+          >
             Log in
           </Link>
         </p>

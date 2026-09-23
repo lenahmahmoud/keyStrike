@@ -4,6 +4,7 @@ import Login from "../features/users/Login";
 import SignUp from "../features/users/SignUp";
 import DashBoard from "../features/history/DashBoard";
 import Test from "../features/test/Test";
+import Result from "../features/results/Result";
 
 import RootLayout from "../layouts/RootLayout";
 import AuthLayout from "../layouts/AuthLayout";
@@ -23,6 +24,7 @@ const router = createBrowserRouter(
         <Route index element={<Home />} />
         <Route path="howitworks" element={<HowItWorks />} />
         <Route path="test" element={<Test></Test>}></Route>
+        <Route path="result" element={<Result></Result>}></Route>
       </Route>
       <Route element={<AuthLayout />}>
         <Route path="login" element={<Login />} />

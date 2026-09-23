@@ -2,9 +2,9 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 const initialState = {
   isLoggedIn: false,
-  user: null,
   error: "",
   status: "idle",
+  id: "",
 };
 
 export const fetchUsers = createAsyncThunk(
@@ -18,6 +18,7 @@ export const fetchUsers = createAsyncThunk(
     if (!existed) {
       return rejectWithValue("invalid login ");
     }
+
     return existed;
   },
 );
@@ -71,3 +72,4 @@ const userSlice = createSlice({
 });
 export default userSlice.reducer;
 export const isLoggedIn = (state) => state.user.isLoggedIn;
+export const user = (state) => state.user.user;
