@@ -30,16 +30,17 @@ const router = createBrowserRouter(
         <Route path="login" element={<Login />} />
         <Route path="signup" element={<SignUp />} />
       </Route>
-      <Route >
-     <Route element={<HistoryLayout></HistoryLayout>}>
-       <Route path="dashboard" element={<DashBoard></DashBoard>}></Route>
-     </Route>
+      <Route>
+        <Route element={<HistoryLayout></HistoryLayout>}>
+          <Route path="dashboard" element={<DashBoard></DashBoard>}></Route>
+        </Route>
       </Route>
     </>,
   ),
 );
 
 const App = () => {
+  
   return (
     <>
       <main>

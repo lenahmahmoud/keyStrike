@@ -6,15 +6,22 @@ import {
   toggleTheme,
   selectTheme,
 } from "../../features/settings/settingsSlics";
-
+import { useEffect } from "react";
 import { Sun, Moon } from "lucide-react";
 
 const Navbar = () => {
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const theme = useSelector(selectTheme);
-
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    const favicon = document.querySelector("link[rel='icon']");
+
+    if (favicon) {
+      favicon.href =
+        theme === "dark" ? "/icons/dark-icon.svg" : "/icons/light-icon.svg";
+    }
+  }, [theme]);
   return (
     <>
       <nav className="flex items-center justify-between px-8 py-4">

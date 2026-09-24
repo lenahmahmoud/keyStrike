@@ -163,7 +163,6 @@ const Test = () => {
         {
           resetEsc&& <span className="text-2xl my-3 text-light-text-secondary dark:text-accent">Test reset — Esc pressed</span>
         }
-        {/* Mode selector */}
         <div className="flex items-center gap-1 bg-light-surface dark:bg-white/5 border border-light-border dark:border-white/10 rounded-lg px-2 py-1.5 text-2xl">
           <button
             className={`px-3 py-1 rounded-md font-medium cursor-pointer ${

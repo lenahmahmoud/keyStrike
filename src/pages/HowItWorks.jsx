@@ -1,4 +1,5 @@
 import { SlidersHorizontal, Keyboard, LineChart } from "lucide-react";
+import { Link } from "react-router";
 
 const steps = [
   {
@@ -59,9 +60,14 @@ const HowItWorks = () => {
           ))}
         </div>
 
-        <button className="mt-10 bg-light-primary dark:bg-accent text-light-surface dark:text-dark font-semibold px-6 py-2.5 rounded-lg hover:brightness-95 cursor-pointer">
-          Got it, let's go
-        </button>
+        <div className="mt-10">
+          <Link
+            to="/test"
+            className="mt-20 bg-light-primary dark:bg-accent text-light-surface dark:text-dark font-semibold px-6 py-2.5 rounded-lg hover:brightness-95 cursor-pointer"
+          >
+            Got it, let's go
+          </Link>
+        </div>
       </div>
     </section>
   );
