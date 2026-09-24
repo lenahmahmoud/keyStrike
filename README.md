@@ -1,22 +1,6 @@
-# React + Vite
-
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
 # Keystrike
 
-A minimalist typing speed test web app built with React, Redux Toolkit, and a fake REST backend (json-server). Practice your typing speed and accuracy across three modes, and track your progress over time with a personal account.
+A minimalist typing speed test web app built with React, Redux Toolkit, and a mock REST backend (json-server). Test your typing speed and accuracy across three modes, track your progress over time, and see it visualized on a personal dashboard.
 
 ## Features
 
@@ -24,69 +8,84 @@ A minimalist typing speed test web app built with React, Redux Toolkit, and a fa
   - **Time** — type for a fixed duration (15s / 30s / 60s / 120s) against a stream of random common words
   - **Words** — type a fixed number of words (10 / 25 / 50 / 100)
   - **Quote** — type a real quote, chosen by length (Short / Medium / Long)
-- **Live stats while typing** — real-time WPM and accuracy as you type, with per-character correct/incorrect highlighting
-- **Results screen** — final WPM, accuracy, character count, error count, and a WPM-over-time chart for each completed test
-- **Fake authentication** — sign up / log in via json-server, used only to unlock personal history (not intended as secure/production auth)
-- **Personal dashboard** — best WPM, average WPM, tests taken, a progress chart, and a table of recent attempts (visible only when logged in)
-- **Dark / light theme**
-- **Fully responsive** layout
+- **Live word-by-word feedback** — completed words render green (correct) or red (wrong), untyped words stay gray
+- **Real-time timing** — a live countdown for Time mode, elapsed-time tracking for Words/Quote mode
+- **WPM and accuracy** calculated from actual typed data once a test finishes
+- **Keyboard shortcut** — press Esc to reset the current test
+- **Sound feedback** when a test completes
+- **Dark / light theme toggle**, persisted across sessions
+- **Authentication** (mock, via json-server) — sign up / log in
+- **Personal dashboard** for logged-in users — best WPM, average WPM, tests taken, a progress-trend chart, and a table of recent attempts
+- **Guest mode** — anyone can take a test; only logged-in users get saved history
+- Fully responsive layout
 
 ## Tech stack
 
 | Layer | Tool |
 |---|---|
 | UI | React |
-| Routing | React Router |
+| Routing | React Router (`createBrowserRouter`, nested layouts) |
 | Global state | Redux Toolkit |
-| Local/session-specific state | `useReducer` (typing engine) |
+| Local typing engine | `useReducer` |
 | Fake backend | json-server |
-| Charts | Recharts (or Chart.js) |
-| Styling | CSS / Tailwind (adjust to your setup) |
+| Styling | Tailwind CSS v4 |
+| Icons | lucide-react |
 
-## How WPM is calculated
+## How WPM and accuracy are calculated
+
+Since correctness is tracked at the **word level** (not character-by-character), the calculations are:
 
 ```
-WPM = (Correct Characters Typed / 5) / Time Elapsed (minutes)
-Accuracy = (Correct Characters / Total Characters Typed) × 100
+WPM = Correct Words / Time Elapsed (minutes)
+Accuracy = (Correct Words / Total Words Attempted) × 100
 ```
 
-- **Time mode**: time is fixed, characters typed is variable — WPM is calculated the moment the timer hits zero.
-- **Words mode**: word count is fixed, time is variable — the timer starts on the first keystroke and stops on the last character of the final word.
-- **Quote mode**: the quote's length is fixed, time is variable — same timing approach as Words mode, applied to a specific pre-written quote instead of randomly generated words.
+- **Time mode** — time is fixed; WPM is calculated the moment the countdown reaches zero.
+- **Words / Quote mode** — the word count (or quote) is fixed; elapsed time is tracked from the first keystroke to the last word typed.
 
 ## Project structure
 
 ```
 src/
-├── app/
-│   ├── App.jsx
-│   └── store.js
-├── pages/
-│   └── Home.jsx, HowItWorks.jsx
 ├── features/
-│   ├── auth/          # authSlice, Login, Signup
-│   ├── typingTest/     # Test screen, mode/sub-option selectors, typing box, useTypingEngine hook
-│   ├── results/        # Result screen, stat cards, WPM chart
-│   ├── history/        # historySlice, Dashboard, history table, progress chart
-│   └── settings/        # settingsSlice, settings modal
+│   ├── auth/            # userSlice, Login, Signup
+│   ├── typingTest/       # Test.jsx, useTypingEngine.js (the live typing reducer)
+│   ├── results/           # resultsSlice, Result.jsx
+│   ├── history/            # historySlice, Dashboard/history UI
+│   └── settings/             # settingsSlice (theme, sound, etc.)
+├── layouts/
+│   ├── RootLayout.jsx        # Navbar + Footer + Outlet
+│   ├── AuthLayout.jsx          # wraps Login/Signup
+│   └── ProtectedLayout.jsx      # redirects to /login if not authenticated
+├── pages/
+│   ├── Home.jsx
+│   └── HowItWorks.jsx
+├── app/
+│   ├── store.js
+│   └── router.jsx
 ├── components/
-│   ├── layout/          # Navbar, Footer
-│   └── ui/              # Button, Modal, and other shared UI
+│   ├── layout/                  # Navbar, Footer
+│   └── ui/                       # shared buttons, modals, etc.
 ├── data/
-│   ├── wordBank.js       # common words used for Time/Words modes
-│   └── quotes.js         # quotes tagged by length for Quote mode
+│   ├── wordBank.js                # word pool for Time/Words modes
+│   └── quotes.js                   # quotes, keyed by length
 ├── services/
-│   └── api.js            # calls to the json-server fake backend
+│   └── axios.js                     # configured axios instance for json-server
 └── utils/
-    ├── calculateWpm.js
-    └── generateText.js
+    ├── generate.js                    # builds the word stream / picks a quote
+    ├── countCorrectChar.js              # per-character comparison helper
+    └── calculateResult.js                # final WPM / accuracy calculation
 ```
 
 ## State management approach
 
-- **`useReducer`** handles the live typing session (idle → running → finished), since this state changes on every keystroke and is local to the typing screen only.
-- **Redux Toolkit** handles state shared across the app: authentication status, saved test history (fetched from json-server), and user settings/theme.
-- Only the *final result* of a completed test is passed from the local reducer into Redux, to be saved to history if the user is logged in.
+State is split by how it behaves, not just what it's for:
+
+- **`useReducer`** (`useTypingEngine.js`) owns the live typing session — word stream, typed text, current word index, timers. This state changes on every keystroke and is only ever needed by the typing screen, so it deliberately stays out of Redux.
+- **Redux Toolkit** owns everything genuinely shared across the app: authentication status, saved history (synced with json-server), the most recent test result (handed off between the Test and Result pages), and settings like theme.
+- **Plain `useState`** handles simple UI selection, like the active mode and sub-option.
+
+There is intentionally **no dedicated slice for the live test** — the reducer handles the whole typing session locally, and only the final, calculated result is ever dispatched into Redux.
 
 ## Running locally
 
@@ -95,7 +94,7 @@ src/
 npm install
 
 # start the fake backend
-npx json-server --watch db.json --port 3001
+npx json-server --watch db.json --port 3000
 
 # start the app
 npm run dev
@@ -103,5 +102,5 @@ npm run dev
 
 ## Notes
 
-- Authentication is intentionally fake (json-server, no password hashing or real sessions) — this project is for practicing React state management patterns, not for production security.
-- Word bank and quotes are static local data; no external API or AI is used to generate typing content.
+- Authentication is intentionally mock/fake (json-server, no password hashing or real sessions) — built to practice state management patterns, not production security.
+- The word bank and quotes are static local data; nothing about test content is fetched from an external API or generated by AI.
